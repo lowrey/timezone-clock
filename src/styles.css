@@ -1,0 +1,439 @@
+/* ── Reset & Base ─────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  background: #0a0a1a;
+  color: #e0e0f0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ── Layout ───────────────────────────────────────────────── */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  position: relative;
+  background: radial-gradient(
+      ellipse at 20% 50%,
+      rgba(90, 50, 255, 0.12) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse at 80% 50%,
+      rgba(0, 200, 255, 0.1) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse at 50% 100%,
+      rgba(255, 50, 150, 0.08) 0%,
+      transparent 50%
+    ),
+    #0a0a1a;
+}
+
+/* Animated background orbs */
+.app::before,
+.app::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.3;
+  animation: float 12s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.app::before {
+  width: 500px;
+  height: 500px;
+  background: rgba(90, 50, 255, 0.25);
+  top: -100px;
+  left: -100px;
+  animation-delay: 0s;
+}
+
+.app::after {
+  width: 400px;
+  height: 400px;
+  background: rgba(0, 200, 255, 0.2);
+  bottom: -80px;
+  right: -80px;
+  animation-delay: -6s;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -20px) scale(1.05);
+  }
+  66% {
+    transform: translate(-20px, 15px) scale(0.95);
+  }
+}
+
+/* ── Header ───────────────────────────────────────────────── */
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+  z-index: 1;
+}
+
+.header h1 {
+  font-family: "Orbitron", monospace;
+  font-weight: 900;
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #a78bfa, #60d5fa, #f472b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header p {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: rgba(200, 200, 230, 0.5);
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+/* ── Selector ─────────────────────────────────────────────── */
+.selector-wrapper {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 2.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.selector-btn {
+  padding: 0.65rem 1.4rem;
+  border: 1px solid rgba(160, 140, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(200, 200, 230, 0.7);
+  font-family: "Inter", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.selector-btn:hover {
+  border-color: rgba(160, 140, 255, 0.45);
+  color: #e0e0f0;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.selector-btn.active {
+  border-color: rgba(160, 140, 255, 0.6);
+  background: linear-gradient(
+    135deg,
+    rgba(90, 50, 255, 0.25),
+    rgba(0, 180, 255, 0.15)
+  );
+  color: #fff;
+  box-shadow: 0 0 20px rgba(90, 50, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* ── Clocks Container ─────────────────────────────────────── */
+.clocks-container {
+  display: flex;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Clock Card ───────────────────────────────────────────── */
+.clock-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(160, 140, 255, 0.12);
+  border-radius: 24px;
+  padding: 2.5rem 3rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  text-align: center;
+  min-width: 320px;
+  position: relative;
+  overflow: hidden;
+  animation: cardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.clock-card:hover {
+  border-color: rgba(160, 140, 255, 0.3);
+  box-shadow: 0 8px 40px rgba(90, 50, 255, 0.08);
+}
+
+/* Subtle inner glow */
+.clock-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(160, 140, 255, 0.06) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.clock-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+/* ── City Label ───────────────────────────────────────────── */
+.city-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 0.35rem;
+}
+
+.city-emoji {
+  font-size: 1.3rem;
+}
+
+.city-name {
+  font-family: "Orbitron", monospace;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(200, 200, 230, 0.8);
+}
+
+.city-region {
+  font-size: 0.72rem;
+  color: rgba(200, 200, 230, 0.35);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+/* ── Time Display ─────────────────────────────────────────── */
+.time-display {
+  font-family: "Orbitron", monospace;
+  font-weight: 900;
+  font-size: clamp(3rem, 8vw, 4.5rem);
+  letter-spacing: 0.06em;
+  line-height: 1;
+  margin-bottom: 0.3rem;
+  position: relative;
+}
+
+.time-display .hours,
+.time-display .minutes {
+  background: linear-gradient(
+    180deg,
+    #ffffff 30%,
+    rgba(200, 200, 230, 0.7) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.time-display .colon {
+  background: linear-gradient(180deg, #a78bfa 30%, #60d5fa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: blink 1s ease-in-out infinite;
+  margin: 0 2px;
+}
+
+.time-display .seconds {
+  font-size: 0.4em;
+  vertical-align: super;
+  margin-left: 4px;
+  background: linear-gradient(
+    180deg,
+    rgba(160, 140, 255, 0.8),
+    rgba(96, 213, 250, 0.6)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+.time-display .ampm {
+  font-size: 0.25em;
+  vertical-align: super;
+  margin-left: 8px;
+  color: rgba(200, 200, 230, 0.45);
+  -webkit-text-fill-color: rgba(200, 200, 230, 0.45);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
+/* ── Date Display ─────────────────────────────────────────── */
+.date-display {
+  font-size: 0.85rem;
+  color: rgba(200, 200, 230, 0.4);
+  font-weight: 500;
+  margin-top: 1rem;
+  letter-spacing: 0.04em;
+}
+
+/* ── Day Indicator ────────────────────────────────────────── */
+.day-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.day-indicator.today {
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.2);
+  color: rgba(52, 211, 153, 0.8);
+}
+
+.day-indicator.tomorrow {
+  background: rgba(250, 204, 21, 0.08);
+  border: 1px solid rgba(250, 204, 21, 0.2);
+  color: rgba(250, 204, 21, 0.7);
+}
+
+.day-indicator.yesterday {
+  background: rgba(244, 114, 182, 0.08);
+  border: 1px solid rgba(244, 114, 182, 0.2);
+  color: rgba(244, 114, 182, 0.7);
+}
+
+.day-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.day-indicator.today .day-dot {
+  background: rgba(52, 211, 153, 0.8);
+}
+.day-indicator.tomorrow .day-dot {
+  background: rgba(250, 204, 21, 0.7);
+}
+.day-indicator.yesterday .day-dot {
+  background: rgba(244, 114, 182, 0.7);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+}
+
+/* ── Footer ───────────────────────────────────────────────── */
+.footer {
+  position: relative;
+  z-index: 1;
+  margin-top: 3rem;
+  font-size: 0.7rem;
+  color: rgba(200, 200, 230, 0.2);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .app {
+    justify-content: flex-start;
+    padding: 2rem 1rem 3rem;
+  }
+
+  .header {
+    margin-bottom: 2rem;
+  }
+
+  .clocks-container {
+    gap: 1.5rem;
+    width: 100%;
+  }
+
+  .clock-card {
+    min-width: 0;
+    width: 100%;
+    padding: 2rem 1.5rem;
+  }
+
+  .selector-wrapper {
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+
+  .time-display {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+
+  .footer {
+    margin-top: 2rem;
+  }
+}
